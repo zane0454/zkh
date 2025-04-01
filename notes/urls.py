@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from lists import views  # 添加这行到文件顶部
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', views.home_page, name='home'),
 ]
