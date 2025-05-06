@@ -9,5 +9,6 @@ def view_list(request):
     return render(request, 'list.html', {'items':items} )
 # Create your views here.
 def new_list(request):
-    Item.objects.create(text=request.POST['item_text'])
+    list_user = Item.objects.create()
+    Item.objects.create(text=request.POST['item_text'],list=list_user)
     return redirect('/lists/the-new-page/')

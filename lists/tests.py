@@ -49,6 +49,11 @@ class ListViewTest(TestCase):
         response = self.client.get('/lists/the-new-page/')
         self.assertTemplateUsed(response, 'list.html')
 
+    def test_displays_all_items(self):
+        list_user = Item.objects.create()
+        Item.objects.create(text='itemey 1', list=list_user)
+        Item.objects.create(text='itemey 2', list=list_user)
+
 
 class NewListTest(TestCase):
 
