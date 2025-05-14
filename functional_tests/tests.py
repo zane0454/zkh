@@ -18,6 +18,22 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
+        while True:
+            try:
+                table = self.browser.find_element(By.ID, "id_list_table")
+                rows = table.find_elements(By.TAG_NAME, "tr")
+                self.assertIn(row_text, [row.text for row in rows])
+                return
+            except (AssertionError, WebDriverException, NoSuchElementException) as e:  # 确保捕获所有可能的相关异常
+                if time.time() - start_time > MAX_WAIT:
+                    print(f"DEBUG: Current URL when wait_for_row_in_list_table failed: {self.browser.current_url}")
+                    print(
+                        f"DEBUG: Page source when wait_for_row_in_list_table failed (first 500 chars): {self.browser.page_source[:500]}")
+                    raise e
+                time.sleep(0.5)
+
+    '''def wait_for_row_in_list_table(self, row_text):
+        start_time = time.time()
         while True: #(2)
             try:
                 table = self.browser.find_element(By.ID, "id_list_table") #(3)
@@ -27,7 +43,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
             except (AssertionError, WebDriverException) as e: #(5)
                 if time.time() - start_time > MAX_WAIT: #(6)
                     raise e #(6)
-                time.sleep(0.5) #(5)
+                time.sleep(0.5) #(5)  '''
 
     def test_can_start_a_list_and_retrieve_it_later(self):
 
@@ -65,6 +81,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
     # 他按了回车键后，页面再次更新了,显示了两个待办事项
         self.wait_for_row_in_list_table('1: Buy flowers')
         self.wait_for_row_in_list_table('2: Make tea')
+
+
 
     def test_multiple_users_can_start_lists_at_different_urls(self):
         # 张三新建一个待办事项清单
