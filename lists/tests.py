@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.test import TestCase
 from django.urls import resolve
-from jupyterlab.semver import list_get
+
 
 from lists.views import home_page
 from django.template.loader import render_to_string
